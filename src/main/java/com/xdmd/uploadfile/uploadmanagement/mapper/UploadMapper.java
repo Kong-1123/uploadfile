@@ -22,7 +22,7 @@ public interface UploadMapper {
     @Options(useGeneratedKeys=true,keyProperty = "id",keyColumn = "id")
     @Insert(value = "INSERT INTO upload_file (upload_file_address,upload_file_name, upload_file_type,upload_suffix_name,file_size,create_time,create_author )\n" +
             "VALUES(" +
-            "#{uploadFilePath},"+
+            "#{uploadFileAddress},"+
             "#{uploadFileName},"+
             "#{uploadFileType},"+
             "#{uploadSuffixName},"+

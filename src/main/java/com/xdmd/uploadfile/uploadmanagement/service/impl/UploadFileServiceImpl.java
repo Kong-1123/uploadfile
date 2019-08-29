@@ -1,9 +1,7 @@
 package com.xdmd.uploadfile.uploadmanagement.service.impl;
 
-import com.xdmd.uploadfile.uploadmanagement.mapper.UploadMapper;
 import com.xdmd.uploadfile.uploadmanagement.pojo.UploadFile;
 import com.xdmd.uploadfile.uploadmanagement.uploadutil.FileSuffixJudge;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,9 +15,9 @@ import java.text.SimpleDateFormat;
  */
 @Service
 public class UploadFileServiceImpl {
-    @Autowired
-    UploadMapper uploadMapper;
-    public int insertUpload(MultipartFile file) throws Exception{
+   // @Autowired
+   // UploadMapper uploadMapper;
+    public String insertUpload(MultipartFile file) throws Exception{
         UploadFile uploadFile=new UploadFile();
         // 获取文件名拼接当前系统时间作为新文件名
         String nowtime =  new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis());
@@ -45,12 +43,9 @@ public class UploadFileServiceImpl {
         }
 
         //将获取到的上传文件属性保封装到uploadFile
-        uploadFile.setUploadFilePath(String.valueOf(dest));
-        uploadFile.setFileSize(fileSize);
-        uploadFile.setUploadFileType(contentType);
-        uploadFile.setUploadSuffixName(suffixName);
-        uploadFile.setUploadFileName(file.getOriginalFilename());
-        uploadFile.setCreateAuthor("创建者");
-        return uploadMapper.insertUpload(uploadFile);
+       // UploadFile uploadFile = new UploadFile(0, filePath, fileName, "合同附件", contentType, fileSize, null, "提交者");
+
+        // return uploadMapper.insertUpload(uploadFile);
+        return null;
     }
 }

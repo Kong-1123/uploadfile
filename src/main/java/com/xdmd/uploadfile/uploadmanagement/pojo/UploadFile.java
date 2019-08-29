@@ -1,5 +1,6 @@
 package com.xdmd.uploadfile.uploadmanagement.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.util.Date;
  * @description: 上传文件实体类
  */
 @Data
+@AllArgsConstructor
 public class UploadFile implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +24,7 @@ public class UploadFile implements Serializable {
     /**
      * 上传文件地址
      */
-    private String uploadFilePath;
+    private String uploadFileAddress;
 
     /**
      * 上传文件名

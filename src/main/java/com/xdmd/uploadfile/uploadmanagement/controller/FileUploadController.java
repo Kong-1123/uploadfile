@@ -40,24 +40,34 @@ public class FileUploadController {
     /**
      * 实现单文件上传
      * */
-    @RequestMapping("fileUpload")
+    @PostMapping("fileUpload")
     @ResponseBody
     public String fileUpload(@RequestParam("file") MultipartFile file) {
 
         if (file.isEmpty()) {
             return "false";
         }
-
         // 获取文件名拼接当前系统时间作为新文件名
         String nowtime = new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis());
         StringBuilder pinjiefileName = new StringBuilder(nowtime).append(file.getOriginalFilename());
         String fileName = pinjiefileName.toString();
 
-        //获取文件上传路径
-        String filePath = "D:\\xdmd\\subject-1";
-        File dest = new File(filePath + "\\" + fileName);
-        //获取文件类型
-        String contentType = file.getContentType();
+
+        //获取文件后缀名
+        String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
+        //判断文件的后缀名是否有误
+        Boolean flag = FileSuffixJudge.suffixJudge(fileName);
+        if(flag == false){
+            throw new ExceptionInInitializerError("请上传正确的文件格式");
+        }
+
+        //获取招标课题名稱
+        //Object ketiName = openTenderMapper.getTenderById(oid).get("subjectName");
+        //获取文件上传绝对路径
+        String path = "D:/xdmd/environment/" + "单位名称" + "/" + "课题名称" + "/" + "合同附件" + "/";
+        //StringBuilder initPath = new StringBuilder(path);
+        String filePath = new StringBuilder(path).append(fileName).toString();
+        File dest = new File(filePath);
         //判断文件父目录是否存在
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();
@@ -66,7 +76,15 @@ public class FileUploadController {
         try {
             //保存文件
             file.transferTo(dest);
-            return "上传成功";
+            // 获取文件大小
+           // File file1 = new File(filePath);
+            String fileSize = String.valueOf(dest.length());
+            //封装对象
+            UploadFile uploadFile = new UploadFile(0, filePath, fileName, "合同附件", suffixName, fileSize, null, "提交者");
+            //保存到数据库中
+            int insertNum=uploadMapper.insertUpload(uploadFile);
+            System.out.println(insertNum);
+            return "上传成功-->"+filePath;
         } catch (Exception e) {
             e.printStackTrace();
             return "上传失败";
@@ -143,7 +161,7 @@ public class FileUploadController {
                     System.out.println(fileSize);
                     //将获取到的上传文件属性保封装到uploadFile
                     UploadFile uploadFile=new UploadFile();
-                    uploadFile.setUploadFilePath(String.valueOf(dest));
+                    uploadFile.setUploadFileAddress(String.valueOf(dest));
                     uploadFile.setFileSize(fileSize);
                     uploadFile.setUploadFileType(fileType);
                     uploadFile.setUploadSuffixName(suffixName);
