@@ -1,10 +1,10 @@
 package com.xdmd.uploadfile.uploadmanagement.mapper;
 
 import com.xdmd.uploadfile.uploadmanagement.pojo.UploadFile;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.HashMap;
 
 /**
  * @author: Kong
@@ -30,4 +30,25 @@ public interface UploadMapper {
             "NOW(),"+
             "#{createAuthor})")
     int insertUpload(UploadFile uploadFile);
+
+    /**
+     * 获取文件路径和文件名
+     * @param id
+     * @return
+     */
+    @Select("SELECT\n" +
+            "uf.id,\n" +
+            "uf.upload_file_name,\n" +
+            "uf.upload_file_address\n" +
+            "FROM\n" +
+            "upload_file uf,\n" +
+            "open_tender ot\n" +
+            "WHERE\n" +
+            "uf.id in(\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.winning_file_attachment_id and ot.id=#{id}),\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.announcement_transaction_announcement_id and ot.id=#{id),\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.deal_notification_attachment_id and ot.id=#{id),\n" +
+            "(select uf.id from open_tender ot,upload_file uf where uf.id=ot.response_file_attachment_id and ot.id=#{id)\n" +
+            ")")
+    HashMap getfileInfo(@Param("id") int id);
 }

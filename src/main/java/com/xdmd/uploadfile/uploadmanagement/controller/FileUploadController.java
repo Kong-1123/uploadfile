@@ -77,13 +77,11 @@ public class FileUploadController {
             //保存文件
             file.transferTo(dest);
             // 获取文件大小
-           // File file1 = new File(filePath);
             String fileSize = String.valueOf(dest.length());
             //封装对象
             UploadFile uploadFile = new UploadFile(0, filePath, fileName, "合同附件", suffixName, fileSize, null, "提交者");
             //保存到数据库中
             int insertNum=uploadMapper.insertUpload(uploadFile);
-            System.out.println(insertNum);
             return "上传成功-->"+filePath;
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,10 +118,27 @@ public class FileUploadController {
             StringBuilder pinjiefileName=new StringBuilder(nowtime).append(fileList.get(i).getOriginalFilename());
             String fileName =pinjiefileName.toString();
 
+            //获取文件类型
+            String fileType=null;
+            if(i==0){
+                fileType="中期检查表附件";
+            }
+            else if(i==1){
+                fileType="专家评估表附件";
+            }
+            else if(i==2){
+                fileType="该课题意见附件";
+            }
 
-            //获取文件上传路径
-            String filePath = "D:/xdmd/environment/";
-            File dest = new File(filePath + "\\" + fileName);
+            //获取招标课题名稱【从合同表获取】
+            //Object ketiName = openTenderMapper.getTenderById(oid).get("subjectName");
+            //获取合同课题名稱【从合同表获取】
+            String unitName="单位名称";
+            //获取合同课题编号【从合同表获取】
+            //String ProjectNo="课题编号";
+            //获取文件上传绝对路径
+            String filePath = "D:/xdmd/environment/" + unitName + "/" + "课题名称" + "/";
+            File dest = new File(filePath + "/" + fileName);
 
             //获取文件后缀名
             String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -131,18 +146,6 @@ public class FileUploadController {
             Boolean flag = FileSuffixJudge.suffixJudge(fileName);
             if(flag == false){
                 throw new ExceptionInInitializerError("请上传正确的文件格式");
-            }
-
-            //获取文件类型
-            String fileType=null;
-            if(i==0){
-                fileType="图片类型";
-            }
-            else if(i==1){
-                fileType="doc类型";
-            }
-            else if(i==2){
-                 fileType="pdf类型";
             }
 
             //判断是否为空
@@ -159,15 +162,10 @@ public class FileUploadController {
                     File StrValueOf = new File(String.valueOf(dest));
                     String fileSize = String.valueOf(StrValueOf.length());
                     System.out.println(fileSize);
-                    //将获取到的上传文件属性保封装到uploadFile
-                    UploadFile uploadFile=new UploadFile();
-                    uploadFile.setUploadFileAddress(String.valueOf(dest));
-                    uploadFile.setFileSize(fileSize);
-                    uploadFile.setUploadFileType(fileType);
-                    uploadFile.setUploadSuffixName(suffixName);
-                    uploadFile.setUploadFileName(fileName);
-                    uploadFile.setCreateAuthor("创建者");
-                    uploadMapper.insertUpload(uploadFile);
+                    //封装对象
+                    UploadFile uploadFile = new UploadFile(0, filePath, fileName, "合同附件", suffixName, fileSize, null, "提交者");
+                    //保存到数据库中
+                    int insertNum=uploadMapper.insertUpload(uploadFile);
                 }catch (Exception e) {
                     e.printStackTrace();
                     return "上传失败";
