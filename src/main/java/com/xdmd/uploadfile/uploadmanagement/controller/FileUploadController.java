@@ -106,7 +106,6 @@ public class FileUploadController {
     @PostMapping(value="multifileUpload")
     @ResponseBody
     public String multifileUpload(HttpServletRequest request){
-
         List<MultipartFile> fileList = ((MultipartHttpServletRequest)request).getFiles("fileName");
 
         if(fileList.isEmpty()){
@@ -130,14 +129,12 @@ public class FileUploadController {
                 fileType="该课题意见附件";
             }
 
-            //获取招标课题名稱【从合同表获取】
-            //Object ketiName = openTenderMapper.getTenderById(oid).get("subjectName");
-            //获取合同课题名稱【从合同表获取】
-            String unitName="单位名称";
-            //获取合同课题编号【从合同表获取】
-            //String ProjectNo="课题编号";
+            //根据招标备案表的id 获取该公司的名字
+           // String unitName = contractManageMapper.queryUnitNameBycid(cid);
+            //获取课题名称
+            //String ketiName = getManageInfoById(cid).getSubjectName();
             //获取文件上传绝对路径
-            String filePath = "D:/xdmd/environment/" + unitName + "/" + "课题名称" + "/";
+            String filePath = "D:/xdmd/environment/" + "单位名称" + "/" + "课题名称" + "/"+"中期检查";
             File dest = new File(filePath + "/" + fileName);
 
             //获取文件后缀名
